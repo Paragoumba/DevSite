@@ -1,0 +1,111 @@
+body {
+
+    padding: 10px;
+    text-align: center;
+
+}
+
+.bg-theme {
+
+    background-color: #333;
+
+}
+
+ul {
+
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+
+}
+
+ul li {
+
+    margin-bottom: 10px;
+
+}
+
+ul li:last-child {
+
+    margin-bottom: 0;
+
+}
+
+ul li.card div.card-body p:last-child {
+
+    margin-bottom: 0;
+
+}
+
+header {
+
+    margin-bottom: 10px;
+
+}
+
+footer {
+
+    margin-top: 10px;
+
+}
+
+header, footer {
+
+    padding: 10px 0 10px;
+
+}
+
+header div:first-child.row {
+
+    margin-right: -11px;
+
+}
+
+header div div.card:first-child {
+
+    margin-left: 100px;
+
+}
+
+header div div h1 {
+
+    margin-top: 2%;
+
+}
+
+header div div.card:last-child {
+
+    margin-top: 10%;
+
+}
+
+.login {
+
+    margin-top: 45%;
+
+}
+
+.card {
+
+    padding-left: 0;
+    padding-right: 0;
+
+}
+
+.form-left {
+
+    float: left;
+    
+}
+
+.form-right {
+
+    clear: both;
+    
+}
+
+.card-body {
+
+    text-align: left;
+
+}

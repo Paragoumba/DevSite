@@ -109,3 +109,12 @@ header div div.card:last-child {
     text-align: left;
 
 }
+
+*:not(.selectable) {
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}

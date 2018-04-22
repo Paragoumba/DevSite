@@ -1,17 +1,32 @@
 <!DOCTYPE html>
-<?php
-$pseudo = "pseudo";
+<?php $pseudo = "pseudo";
 $passwd = "password";
 
 $edit = 0;
 $delete = 1;
+
+function getCredentials(){
+
+    $fileContent = file_get_contents("../creds.para");
+    $fileContent = explode("\n", $fileContent);
+
+    $creds['server'] = substr($fileContent[0], 0, strlen($fileContent[0]) - 1);
+    $creds['username'] = substr($fileContent[1], 0, strlen($fileContent[1]) - 1);
+    $creds['password'] = substr($fileContent[2], 0, strlen($fileContent[2]) - 1);
+    $creds['dbName'] = substr($fileContent[3], 0, strlen($fileContent[3]) - 1);
+    $creds['panelPseudo'] = substr($fileContent[4], 0, strlen($fileContent[4]) - 1);
+    $creds['panelPassword'] = substr($fileContent[5], 0, strlen($fileContent[5]) - 1);
+
+    return $creds;
+
+}
 
 function getMaxId($conn){
 
     $sql = "SELECT max(id) FROM `projects`";
     $result = $conn->query($sql);
 
-    while ($maxId = $result->fetch_assoc()) return $maxId['max(id)'];
+    while ($maxId = $result -> fetch_assoc()) return $maxId['max(id)'];
 
     return 0;
 }
@@ -76,7 +91,9 @@ function getStateName($state){
 <body class="bg-theme">
     <div class="container-fluid">
         <div class="row">
-<?php if (isset($_POST['pseudo']) && isset($_POST['passwd']) && ($_POST['pseudo'] === $pseudo && $_POST['passwd'] === $passwd)) {
+<?php $creds = getCredentials();
+
+if (isset($_POST['pseudo']) && isset($_POST['passwd']) && $_POST['pseudo'] === $creds['panelPseudo'] && $_POST['passwd'] === $creds['panelPassword']) {
 
     //Logged
     setcookie('pseudo', $_POST['pseudo'], time() + 3600000);
@@ -84,15 +101,10 @@ function getStateName($state){
 
 }
 
-if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo'] === $pseudo && $_COOKIE['passwd'] === $passwd){
-
-    $server = "server";
-    $username = "pseudo";
-    $userPassword = "password";
-    $dbName = "db";
+if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo'] === $creds['panelPseudo'] && $_COOKIE['passwd'] === $creds['panelPassword']){
 
     // Create connection
-    $conn = new mysqli($server, $username, $userPassword, $dbName);
+    $conn = new mysqli($creds['server'], $creds['username'], $creds['password'], $creds['dbName']);
 
     // Check connection
     if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
@@ -122,44 +134,44 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
                 println("                        <div class='form-row'>");
                 println("                            <div class='form-group col-lg-6'>");
                 println("                                <label for='title'>Titre</label>");
-                println("                                <input class='form-control' type='text' name='title' id='title' placeholder='Title' value='" . $row['title'] . "'>");
+                println("                                <input class='form-control selectable' type='text' name='title' id='title' placeholder='Title' value='" . $row['title'] . "'>");
                 println("                            </div>");
                 println("                            <div class='form-group col-lg-6'>");
                 println("                                <label for='creator'>Créateur</label>");
-                println("                                <input class='form-control' type='text' name='creator' id='creator' placeholder='Creator' value='" . $row['creator'] . "'>");
+                println("                                <input class='form-control selectable' type='text' name='creator' id='creator' placeholder='Creator' value='" . $row['creator'] . "'>");
                 println("                            </div>");
                 println("                        </div>");
                 println("                        <div class='form-group'>");
                 println("                            <label for='description'>Description</label>");
-                println("                            <textarea class='form-control' cols='40' rows='5' name='description' id='description' placeholder='Description'>" . $row['description'] . "</textarea>");
+                println("                            <textarea class='form-control selectable' cols='40' rows='5' name='description' id='description' placeholder='Description'>" . $row['description'] . "</textarea>");
                 println("                        </div>");
                 println("                        <div class='form-group'>");
                 println("                            <label for='link'>Lien</label>");
-                println("                            <input class='form-control' type='text' name='link' id='link' placeholder='Link' value='" . $row['link'] . "'>");
+                println("                            <input class='form-control selectable' type='text' name='link' id='link' placeholder='Link' value='" . $row['link'] . "'>");
                 println("                        </div>");
                 println("                        <div class='form-group'>");
                 println("                            <label for='state'>Etat</label>");
-                println("                            <input class='form-control' type='number' max='3' min='0' name='state' id='state' aria-describedBy='stateInfo' value='" . $row['state'] . "'>");
-                println("                            <small id='stateInfo' class='form-text'>0 : Actif, 1 : Inactif, 2 : Terminé, 3 : Annulé</small>");
+                println("                            <input class='form-control selectable' type='number' max='3' min='0' name='state' id='state' aria-describedBy='stateInfo' value='" . $row['state'] . "'>");
+                println("                            <small id='stateInfo' class='form-text selectable'>0 : Actif, 1 : Inactif, 2 : Terminé, 3 : Annulé</small>");
                 println("                        </div>");
                 println("                        <div class='form-group'>");
                 println("                            <label for='stable'>Stabilité</label>");
-                println("                            <input class='form-control' type='number' max='1' min='0' name='stable' id='stable' aria-describedBy='stableInfo' value='" . $row['stable'] . "'>");
-                println("                            <small id='stableInfo' class='form-text'>0 : Instable, 1 : Stable</small>");
+                println("                            <input class='form-control selectable' type='number' max='1' min='0' name='stable' id='stable' aria-describedBy='stableInfo' value='" . $row['stable'] . "'>");
+                println("                            <small id='stableInfo' class='form-text selectable'>0 : Instable, 1 : Stable</small>");
                 println("                        </div>");
                 println("                        <div class='form-group'>");
                 println("                            <label for='languages'>Langages</label>");
-                println("                            <input class='form-control' type='text' name='languages' id='languages' aria-describedBy='languagesInfo' value='" . $row['languages'] . "'>");
-                println("                            <small id='languagesInfo' class='form-text'>La liste des langages utilisés, séparés par des espaces.</small>");
+                println("                            <input class='form-control selectable' type='text' name='languages' id='languages' aria-describedBy='languagesInfo' value='" . $row['languages'] . "'>");
+                println("                            <small id='languagesInfo' class='form-text selectable'>La liste des langages utilisés, séparés par des espaces.</small>");
                 println("                        </div>");
                 println("                        <div class='form-check'>");
                 println("                            <div class='form-group col-lg-6'>");
-                println("                                <input class='form-check-input' type='radio' name='saveChoice' id='save' value='save' checked>");
-                println("                                <label class='form-check-label' for='save'>Sauvegarder le brouillon</label>");
+                println("                                <input class='form-check-input selectable' type='radio' name='saveChoice' id='save' value='save' checked>");
+                println("                                <label class='form-check-label selectable' for='save'>Sauvegarder le brouillon</label>");
                 println("                            </div>");
                 println("                            <div class='form-group col-lg-6'>");
-                println("                                <input class='form-check-input' type='radio' name='saveChoice' id='publish' value='publish'>");
-                println("                                <label class='form-check-label' for='publish'>Publier</label>");
+                println("                                <input class='form-check-input selectable' type='radio' name='saveChoice' id='publish' value='publish'>");
+                println("                                <label class='form-check-label selectable' for='publish'>Publier</label>");
                 println("                            </div>");
                 println("                        </div>");
                 println("                        <input type='hidden' name='id' value='" . $row['id'] . "'>");
@@ -189,44 +201,44 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
             println("                        <div class='form-row'>");
             println("                            <div class='form-group col-lg-6'>");
             println("                                <label for='title'>Titre</label>");
-            println("                                <input class='form-control' type='text' name='title' id='title' placeholder='Title' value=''>");
+            println("                                <input class='form-control selectable' type='text' name='title' id='title' placeholder='Title' value=''>");
             println("                            </div>");
             println("                            <div class='form-group col-lg-6'>");
             println("                                <label for='creator'>Créateur</label>");
-            println("                                <input class='form-control' type='text' name='creator' id='creator' placeholder='Creator' value=''>");
+            println("                                <input class='form-control selectable' type='text' name='creator' id='creator' placeholder='Creator' value=''>");
             println("                            </div>");
             println("                        </div>");
             println("                        <div class='form-group'>");
             println("                            <label for='description'>Description</label>");
-            println("                            <textarea class='form-control' cols='40' rows='5' name='description' id='description' placeholder='Description'></textarea>");
+            println("                            <textarea class='form-control selectable' cols='40' rows='5' name='description' id='description' placeholder='Description'></textarea>");
             println("                        </div>");
             println("                        <div class='form-group'>");
             println("                            <label for='link'>Lien</label>");
-            println("                            <input class='form-control' type='text' name='link' id='link' placeholder='Link' value=''>");
+            println("                            <input class='form-control selectable' type='text' name='link' id='link' placeholder='Link' value=''>");
             println("                        </div>");
             println("                        <div class='form-group'>");
             println("                            <label for='state'>Etat</label>");
-            println("                            <input class='custom-number' type='number' max='3' min='0' name='state' id='state' aria-describedBy='stateInfo' value='0'>");
-            println("                            <small id='stateInfo' class='form-text'>0 : Actif, 1 : Inactif, 2 : Terminé, 3 : Annulé</small>");
+            println("                            <input class='form-control selectable' type='number' max='3' min='0' name='state' id='state' aria-describedBy='stateInfo' value='0'>");
+            println("                            <small id='stateInfo' class='form-text selectable'>0 : Actif, 1 : Inactif, 2 : Terminé, 3 : Annulé</small>");
             println("                        </div>");
             println("                        <div class='form-group'>");
             println("                            <label for='stable'>Stabilité</label>");
-            println("                            <input class='form-control' type='number' max='1' min='0' name='stable' id='stable' aria-describedBy='stableInfo' value='0'>");
-            println("                            <small id='stableInfo' class='form-text'>0 : Instable, 1 : Stable</small>");
+            println("                            <input class='form-control selectable' type='number' max='1' min='0' name='stable' id='stable' aria-describedBy='stableInfo' value='0'>");
+            println("                            <small id='stableInfo' class='form-text selectable'>0 : Instable, 1 : Stable</small>");
             println("                        </div>");
             println("                        <div class='form-group'>");
             println("                            <label for='languages'>Langages</label>");
-            println("                            <input class='form-control' type='text' name='languages' id='languages' aria-describedBy='languagesInfo' value=''>");
-            println("                            <small id='languagesInfo' class='form-text'>La liste des langages utilisés, séparés par des espaces.</small>");
+            println("                            <input class='form-control selectable' type='text' name='languages' id='languages' aria-describedBy='languagesInfo' value=''>");
+            println("                            <small id='languagesInfo' class='form-text selectable'>La liste des langages utilisés, séparés par des espaces.</small>");
             println("                        </div>");
             println("                        <div class='form-check'>");
             println("                            <div class='form-group col-lg-6'>");
-            println("                                <input class='form-check-input' type='radio' name='saveChoice' id='save' value='save' checked>");
-            println("                                <label class='form-check-label' for='save'>Sauvegarder le brouillon</label>");
+            println("                                <input class='form-check-input selectable' type='radio' name='saveChoice' id='save' value='save' checked>");
+            println("                                <label class='form-check-label selectable' for='save'>Sauvegarder le brouillon</label>");
             println("                            </div>");
             println("                            <div class='form-group col-lg-6'>");
-            println("                                <input class='form-check-input' type='radio' name='saveChoice' id='publish' value='publish'>");
-            println("                                <label class='form-check-label' for='publish'>Publier</label>");
+            println("                                <input class='form-check-input selectable' type='radio' name='saveChoice' id='publish' value='publish'>");
+            println("                                <label class='form-check-label selectable' for='publish'>Publier</label>");
             println("                            </div>");
             println("                        </div>");
             println("                        <input type='hidden' name='id' value=''>");
@@ -290,8 +302,8 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
         println("                            <p class='card-text'>Identifiants</p>");
         println("                        </div>");
         println("                        <div class='card-body'>");
-        println("                            <p class='card-text'>Pseudo: RPO</p>");
-        println("                            <p class='card-text'>Password: B055MAN69</p>");
+        println("                            <p class='card-text selectable'>Pseudo: RPO</p>");
+        println("                            <p class='card-text selectable'>Password: B055MAN69</p>");
         println("                        </div>");
         println("                    </div>");
         println("                    <div class='col-lg-8'>");
@@ -343,11 +355,11 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
                 $minProjects = true;
 
                 println("                    <li class='card col-lg-12 text-white bg-" . getStateColor($row['state']) . "'>");
-                println("                        <p class='card-header'>" . $row['title'] . "</p>");
+                println("                        <p class='card-header selectable'>" . $row['title'] . "</p>");
                 println("                        <div class='card-body row'>");
                 println("                            <form class='offset-lg-4 form-left' method='post'>");
                 println("                                <input type='hidden' name='id' value='" . $row['id'] . "'>");
-                println("                                <input type='hidden' name='action' value='$edit'>");;
+                println("                                <input type='hidden' name='action' value='$edit'>");
                 println("                                <input class='btn btn-primary' type='submit' value='Editer'>");
                 println("                             </form>");
 
@@ -380,7 +392,7 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
         foreach ($drafts as $row){
 
             println("                    <li class='card col-lg-12 text-white bg-" . getStateColor($row['state']) . "'>");
-            println("                        <p class='card-header'>" . $row['title'] . "</p>");
+            println("                        <p class='card-header selectable'>" . $row['title'] . "</p>");
             println("                        <div class='card-body row'>");
             println("                            <form class='offset-lg-4 form-left' method='post'>");
             println("                                <input type='hidden' name='id' value='" . $row['id'] . "'>");
@@ -417,12 +429,12 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
     println("                <h3 class='card-header'>Page de connexion</h3>");
     println("                <div class='card-body'>");
     println("                    <form method='post'>");
-    println("                        <input type='text' name='pseudo' placeholder='Login'>");
-    println("                        <input type='password' name='passwd' placeholder='Password'>");
+    println("                        <input class='selectable' type='text' name='pseudo' placeholder='Login'>");
+    println("                        <input class='selectable' type='password' name='passwd' placeholder='Password'>");
     println("                        <input class='btn btn-primary' type='submit' value='Valider'>");
     println("                    </form>");
 
-    println("                    <form action='../src'>");
+    println("                    <form action='../'>");
     println("                       <input class='btn btn-primary' type='submit' value='Retour'>");
     println("                    </form>");
     println("                </div>");
@@ -430,7 +442,7 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
 
 }?>
             <footer class="card col-lg-12">
-                <p class="card-text">Fait par Paragoumba avec <a href="https://getbootstrap.com" target="_blank">Bootstrap</a></p>
+                <p class="card-text selectable">Fait par Paragoumba avec <a href="https://getbootstrap.com" target="_blank">Bootstrap</a></p>
             </footer>
         </div>
     </div>

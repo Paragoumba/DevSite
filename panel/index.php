@@ -160,6 +160,11 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
                 println("                            <small id='stableInfo' class='form-text selectable'>0 : Instable, 1 : Stable</small>");
                 println("                        </div>");
                 println("                        <div class='form-group'>");
+                println("                            <label for='stable'>Snippet</label>");
+                println("                            <input class='form-control selectable' type='number' max='1' min='0' name='snippet' id='snippet' aria-describedBy='snippetInfo' value='" . $row['snippet'] . "'>");
+                println("                            <small id='snippetInfo' class='form-text selectable'>0 : Application, 1 : Snippet</small>");
+                println("                        </div>");
+                println("                        <div class='form-group'>");
                 println("                            <label for='languages'>Langages</label>");
                 println("                            <input class='form-control selectable' type='text' name='languages' id='languages' aria-describedBy='languagesInfo' value='" . $row['languages'] . "'>");
                 println("                            <small id='languagesInfo' class='form-text selectable'>La liste des langages utilisés, séparés par des espaces.</small>");
@@ -227,6 +232,11 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
             println("                            <small id='stableInfo' class='form-text selectable'>0 : Instable, 1 : Stable</small>");
             println("                        </div>");
             println("                        <div class='form-group'>");
+            println("                            <label for='snippet'>Snippet</label>");
+            println("                            <input class='form-control selectable' type='number' max='1' min='0' name='snippet' id='snippet' aria-describedBy='snippetInfo' value='0'>");
+            println("                            <small id='snippetInfo' class='form-text selectable'>0 : Application, 1 : Snippet</small>");
+            println("                        </div>");
+            println("                        <div class='form-group'>");
             println("                            <label for='languages'>Langages</label>");
             println("                            <input class='form-control selectable' type='text' name='languages' id='languages' aria-describedBy='languagesInfo' value=''>");
             println("                            <small id='languagesInfo' class='form-text selectable'>La liste des langages utilisés, séparés par des espaces.</small>");
@@ -266,18 +276,18 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
 
             if ($_POST['id'] === "new"){
 
-                $sql = "INSERT INTO `projects` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO `projects` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $statement = $conn->prepare($sql);
                 $id = (getMaxId($conn) + 1);
 
-                $statement->bind_param("issssiiis", $id, $_POST['title'], $_POST['creator'], $_POST['description'], $_POST['link'], $_POST['state'], $publish, $_POST['stable'], $_POST['languages']);
+                $statement->bind_param("issssiiiis", $id, $_POST['title'], $_POST['creator'], $_POST['description'], $_POST['link'], $_POST['state'], $publish, $_POST['stable'], $_POST['snippet'], $_POST['languages']);
 
             } else {
 
-                $sql = "UPDATE `projects` SET `title`=?, `creator`=?, `description`=?, `link`=?, `state`=?, `published`=?, `stable`=?, `languages`=? WHERE `id`=?";
+                $sql = "UPDATE `projects` SET `title`=?, `creator`=?, `description`=?, `link`=?, `state`=?, `published`=?, `stable`=?, `snippet`=?, `languages`=? WHERE `id`=?";
                 $statement = $conn->prepare($sql);
 
-                $statement->bind_param("ssssiiisi", $_POST['title'], $_POST['creator'], $_POST['description'], $_POST['link'], $_POST['state'], $publish, $_POST['stable'], $_POST['languages'], $_POST['id']);
+                $statement->bind_param("ssssiiiisi", $_POST['title'], $_POST['creator'], $_POST['description'], $_POST['link'], $_POST['state'], $publish, $_POST['stable'], $_POST['snippet'], $_POST['languages'], $_POST['id']);
 
             }
 
@@ -317,6 +327,7 @@ if (isset($_COOKIE['pseudo']) && isset($_COOKIE['passwd']) && $_COOKIE['pseudo']
         println("                        </form>");
         println("                    </div>");
 
+        //Projects' states
         println("                    <div class='card bg-light h-75'>");
         println("                        <div class='card-header'>");
         println("                            <p class='card-text'>Etats</p>");

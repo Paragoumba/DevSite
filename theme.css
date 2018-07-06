@@ -1,0 +1,102 @@
+* {
+
+    margin: 0;
+    padding: 0;
+
+}
+
+body {
+
+    color: white;
+    background-color: #2A2723;
+
+}
+
+header {
+
+    background-color: #D62A2A;
+
+}
+
+footer a {
+
+    text-decoration: underline;
+
+}
+
+footer a:hover {
+
+    text-decoration: none;
+
+}
+
+hr {
+
+    background-color: #524F4B;
+
+}
+
+a {
+
+    color: white;
+    text-decoration: none;
+
+}
+
+a:hover {
+
+    color: white;
+
+}
+
+.btn.focus, .btn:focus {
+
+    box-shadow: none;
+
+}
+
+.form-control.focus, .form-control:focus {
+
+    box-shadow: none;
+
+}
+
+.bg-dark {
+
+    background-color: #25221E!important;
+
+}
+
+.dropdown-menu {
+
+    background-color: #2A2723!important;
+    color: white!important;
+
+}
+
+.dropdown-item {
+
+    background-color: #2A2723!important;
+    color: white!important;
+
+}
+
+.dropdown-item:hover {
+
+    background-color: #25221E!important;
+
+}
+
+::selection {
+
+    color: #2A2723;
+    background-color: white;
+
+}
+
+::-moz-selection {
+
+    color: #2A2723;
+    background-color: white;
+
+}

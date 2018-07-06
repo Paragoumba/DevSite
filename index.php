@@ -83,6 +83,9 @@
             case 'javascript':
                 return 'warning';
 
+            case 'sql':
+                return 'info';
+
             default:
                 return 'light';
         }
@@ -116,7 +119,7 @@
                 println("                    <div class='card-body'>");
                 println("                        <p>Pour <u>" . nl2br($row['creator']) . "</u></p>");
                 println("                        <p>" . nl2br($row['description']) . "</p>");
-                println("                        <p>Lien: " . nl2br(($row['link'] !== "-" ? "<a href='" . $row['link'] . "' target='_blank'>" . $row['link'] . "</a>" : "Non publié")) . "</p>");
+                println("                        <p>Lien: " . nl2br(($row['link'] !== "" ? "<a href='" . $row['link'] . "' target='_blank'>" . $row['link'] . "</a>" : "Non publié")) . "</p>");
                 println("                        <p>Status: <span class='badge badge-" . getStateColor($row['state']) . "'>" . getStateName($row['state']) . "</span></p>");
                 echo "                        <div>Langage" . (sizeof($languages) > 1 ? 's' : '') . ": ";
 
@@ -126,7 +129,7 @@
 
                     foreach ($languages as $language) {
 
-                        echo "<span class='badge badge-" . getLanguageColor($language) . "'>$language</span>";
+                        echo "<span class='badge badge-" . getLanguageColor($language) . "'>$language</span> ";
 
                     }
                 }

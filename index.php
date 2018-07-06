@@ -115,7 +115,7 @@
                 $languages = explode(' ', $row['languages']);
 
                 println("                <li class='card selectable'>");
-                println("                    <h3 class='card-header selectable'>" . ($row['stable'] === '1' ? '<span class="badge badge-success">Stable</span> ' : '') . nl2br($row['title']) . ((strpos($row['title'], "DevSite") && $row['creator'] === "Paragoumba") ? " (ce site)" : "") . "</h3>");
+                println("                    <h3 class='card-header selectable'>" . ($row['snippet'] === '1' ? '<span class="badge badge-info">Snippet</span> ' : '') . ($row['stable'] === '1' ? '<span class="badge badge-success">Stable</span> ' : '') . nl2br($row['title']) . ((strpos($row['title'], "DevSite") && $row['creator'] === "Paragoumba") ? " (ce site)" : "") . "</h3>");
                 println("                    <div class='card-body'>");
                 println("                        <p>Pour <u>" . nl2br($row['creator']) . "</u></p>");
                 println("                        <p>" . nl2br($row['description']) . "</p>");

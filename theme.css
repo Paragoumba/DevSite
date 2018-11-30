@@ -7,7 +7,7 @@
 
 body {
 
-    color: white;
+    color:  #fff;
     background-color: #2A2723;
 
 }
@@ -38,14 +38,14 @@ hr {
 
 a {
 
-    color: white;
+    color:  #fff;
     text-decoration: none;
 
 }
 
 a:hover {
 
-    color: white;
+    color:  #fff;
 
 }
 
@@ -61,7 +61,13 @@ a:hover {
 
 }
 
-.bg-dark {
+.badge-warning {
+
+    color: #fff;
+
+}
+
+.bg-dark, .btn-dark {
 
     background-color: #25221E!important;
 
@@ -70,14 +76,14 @@ a:hover {
 .dropdown-menu {
 
     background-color: #2A2723!important;
-    color: white!important;
+    color:  #fff!important;
 
 }
 
 .dropdown-item {
 
     background-color: #2A2723!important;
-    color: white!important;
+    color:  #fff!important;
 
 }
 
@@ -90,13 +96,13 @@ a:hover {
 ::selection {
 
     color: #2A2723;
-    background-color: white;
+    background-color:  #fff;
 
 }
 
 ::-moz-selection {
 
     color: #2A2723;
-    background-color: white;
+    background-color:  #fff;
 
 }

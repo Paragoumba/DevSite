@@ -1,99 +1,48 @@
+p a {
+
+    text-decoration: underline;
+
+}
+
+p a:hover {
+
+    text-decoration: none;
+
+}
+
+.card-body p {
+
+    margin-bottom: 0.5rem;
+
+}
+
 ul {
 
     list-style: none;
-    padding: 0;
-    margin-bottom: 0;
 
 }
 
-ul li {
-
-    margin-bottom: 10px;
-
-}
-
-ul li:last-child {
-
-    margin-bottom: 0;
-
-}
-
-ul li.card div.card-body p:last-child {
-
-    margin-bottom: 0;
-
-}
-
-header {
-
-    margin-bottom: 10px;
-
-}
-
-footer {
-
-    margin-top: 10px;
-
-}
-
-header, footer {
-
-    padding: 10px 0 10px;
-
-}
-
-header div:first-child.row {
-
-    margin-right: -11px;
-
-}
-
-header div div.card:first-child {
-
-    margin-left: 100px;
-
-}
-
-header div div h1 {
-
-    margin-top: 2%;
-
-}
-
-header div div.card:last-child {
-
-    margin-top: 10%;
-
-}
-
-.card {
-
-    padding-left: 0;
-    padding-right: 0;
-
-}
-
-.btn-danger {
+.bg-danger, .btn-danger, .badge-danger {
 
     background-color: #D62A2A!important;
 
 }
 
-.form-left {
+.bg-secondary {
 
-    float: left;
-    
+    background-color: #524C47 !important;
+
 }
 
-.form-right {
+.bg-success, .btn-success, .badge-success {
 
-    clear: both;
-    
+    background-color: #26A20A !important;
+
 }
 
-.card-body {
+.bg-info, .btn-info, .badge-info {
 
-    text-align: left;
+    background-color: #0A86b2 !important;
 
 }
 
@@ -104,9 +53,43 @@ header div div.card:last-child {
 
 }
 
+@media(min-width: 992px) {
+    .mtc-lg-8 {
+
+        margin-top: 8rem;
+
+    }
+}
 /* margin-bottom-custom-8rem */
 .mbc-8 {
 
     margin-bottom: 8rem;
+
+}
+
+/* margin-left-custom-7rem */
+.mlc-7 {
+
+    margin-left: 7rem;
+
+}
+
+/* margin-top-custom-15rem */
+.mtc-15 {
+
+    margin-top: 15rem;
+
+}
+
+/* margin-bottom-custom-15rem */
+.mbc-15 {
+
+    margin-bottom: 15rem;
+
+}
+
+.w-33 {
+
+    width: 33%;
 
 }

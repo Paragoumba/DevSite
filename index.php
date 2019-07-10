@@ -1,4 +1,5 @@
-<?php /* Translation */
+<?php $version = "v3.2.3";
+/* Translation */
 $lang = isset($_GET['lang']) ? $_GET['lang'] === "fr" ? "fr" : "en" : "en";
 $translations = array(
         "en" => array("public-projects-list" => "List of all of my public projects", "projects-list" => "Projects' list", "snippet" => "Snippet", "stable" => "Stable", "this-site" => "this site", "for" => "For", "not-specified" => "not specified", "no-description" => "No description", "link" => "Link", "status" => "Status", "not-published" => "Not published", "language" => "Language", "no-project" => "There's no project at the moment", "connection-failed" => "Connection failed", "made-by" => "Made by ", "thanks-to" => " thanks to ", "active" => "Active", "inactive" => "Inactive", "finished" => "Finished", "canceled" => "Canceled"),
@@ -102,9 +103,7 @@ function getLanguageColor($language){
         <div class="row">
             <header class="col-lg-12 mb-5 py-5">
                 <div class="col-lg-1 dropdown d-inline-block align-text-bottom">
-                    <button class="btn bg-transparent dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $translations[$lang]['language']?>
-                    </button>
+                    <button class="btn bg-transparent dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $translations[$lang]['language']?></button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="./?lang=fr">Français</a>
                         <a class="dropdown-item" href="./">English</a>
@@ -120,51 +119,60 @@ function getLanguageColor($language){
         $conn = new PDO("mysql:host=" . $creds['server'] . ";dbname=" . $creds['dbName'], $creds['username'], $creds['password']);
         $conn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql = "CREATE TABLE IF NOT EXISTS projects (id int(11) primary key auto_increment,title tinytext,creator tinytext,description text,link tinytext,state int(11),published tinyint(1),stable tinyint(1),snippet tinyint(1),languages tinytext)";
+        $sql = "CREATE TABLE IF NOT EXISTS Customers (cid int primary key auto_increment, name tinytext)";
         $conn -> exec($sql);
 
-        $sql = "SELECT * FROM projects WHERE `published`=1";
+        $sql = "CREATE TABLE IF NOT EXISTS Languages (lid int primary key auto_increment, name tinytext)";
+        $conn -> exec($sql);
+
+        $sql = "CREATE TABLE IF NOT EXISTS Projects (pid int primary key auto_increment, name tinytext, cid int, description text, link tinytext, state tinyint, published boolean, stable boolean, snippet boolean, CONSTRAINT FK_Projects_Customers FOREIGN KEY (cid) REFERENCES Customers(cid))";
+        $conn -> exec($sql);
+
+        $sql = "CREATE TABLE IF NOT EXISTS PLangs (pid int, lid int, CONSTRAINT PK_PLangs PRIMARY KEY (pid, lid), CONSTRAINT FK_PLangs_Projects FOREIGN KEY (pid) REFERENCES Projects(pid), CONSTRAINT FK_PLangs_Languages FOREIGN KEY (lid) REFERENCES Languages(lid))";
+        $conn -> exec($sql);
+
+        $sql = "SELECT pid, p.name pname, c.name cname, description, link, state, stable, snippet, published FROM Projects p LEFT OUTER JOIN Customers c ON p.cid = c.cid WHERE `published`=1";
         $result = $conn -> query($sql);
 
         if ($result -> rowCount() > 0) {
 
-            println("            <ul class='container'>");
+            println("            <div class='container'>");
             println("                <div class='row'>");
 
-            while ($row = $result -> fetch()){
+            while ($row = $result -> fetch()) {
 
-                if ($row['published']){
+                $languages = array();
+                $sql = "SELECT l.name lname FROM Projects p JOIN PLangs pl ON p.pid = pl.pid JOIN Languages l ON pl.lid = l.lid WHERE p.pid=:pid";
+                $stmt = $conn -> prepare($sql);
 
-                    $languages = explode(' ', $row['languages']);
+                $stmt -> bindParam(":pid", $row['pid']);
+                $stmt -> execute();
 
-                    println("                <li class='col-lg-4'>");
-                    println("                    <div class='card bg-dark mb-3'>");
-                    println("                        <h3 class='card-header text-center'>" . ($row['snippet'] === '1' ? "<span class='badge badge-info'>" . $translations[$lang]['snippet'] . "</span> " : '') . ($row['stable'] === '1' ? "<span class='badge badge-success'>" . $translations[$lang]['stable'] . "</span> " : '') . nl2br($row['title']) . ((strpos($row['title'], "DevSite") && $row['creator'] === "Paragoumba") ? " (" . $translations[$lang]['this-site'] . ")" : "") . "</h3>");
-                    println("                        <div class='card-body'>");
-                    println("                            <p>" . $translations[$lang]['for'] . " <u>" . nl2br($row['creator'] !== "" ? $row['creator'] : $translations[$lang]['not-specified']) . "</u></p>");
-                    println("                            <p>" . nl2br($row['description'] !== "" ? $row['description'] : $translations[$lang]['no-description'] . ".") . "</p>");
-                    println("                            <p>" . $translations[$lang]['link'] . ": " . nl2br(($row['link'] !== "" ? "<a href='" . $row['link'] . "' target='_blank'>" . $row['link'] . "</a>" : $translations[$lang]['not-published'])) . "</p>");
-                    println("                            <p>" . $translations[$lang]['status'] . ": <span class='badge badge-" . getStateColor($row['state']) . "'>" . getStateName($row['state']) . "</span></p>");
-                    echo        "                            <div>" . $translations[$lang]['language'] . (sizeof($languages) > 1 ? 's' : '') . ": ";
+                while ($languages[] = $stmt -> fetch()['lname']);
 
-                    if ($languages[0] === '') $languages[0] = $translations[$lang]['not-specified'];
+                println("                <div class='col-lg-4'>");
+                println("                    <div class='card bg-dark mb-3'>");
+                println("                        <h3 class='card-header text-center'>" . ($row['snippet'] === '1' ? "<span class='badge badge-info'>" . $translations[$lang]['snippet'] . "</span> " : '') . ($row['stable'] === '1' ? "<span class='badge badge-success'>" . $translations[$lang]['stable'] . "</span> " : '') . nl2br($row['pname']) . ((strpos($row['pname'], "DevSite") && $row['cname'] === "Paragoumba") ? " (" . $translations[$lang]['this-site'] . ")" : "") . "</h3>");
+                println("                        <div class='card-body'>");
+                println("                            <p>" . $translations[$lang]['for'] . " <b>" . nl2br($row['cname'] !== NULL ? $row['cname'] : $translations[$lang]['not-specified']) . "</b></p>");
+                println("                            <p>" . nl2br($row['description'] !== "" ? $row['description'] : $translations[$lang]['no-description'] . ".") . "</p>");
+                println("                            <p>" . $translations[$lang]['link'] . ": " . nl2br(($row['link'] !== "" ? "<a href='" . $row['link'] . "' target='_blank'>" . $row['link'] . "</a>" : $translations[$lang]['not-published'])) . "</p>");
+                println("                            <p>" . $translations[$lang]['status'] . ": <span class='badge badge-" . getStateColor($row['state']) . "'>" . getStateName($row['state']) . "</span></p>");
+                echo "                            <div>" . $translations[$lang]['language'] . (sizeof($languages) > 1 ? 's' : '') . ": ";
 
-                    foreach ($languages as $language){
+                if (count($languages) === 0 || $languages[0] === NULL) $languages[0] = $translations[$lang]['not-specified'];
 
-                        echo "<span class='badge badge-" . getLanguageColor($language) . "'>$language</span> ";
+                foreach ($languages as $language) echo "<span class='badge badge-" . getLanguageColor($language) . "'>$language</span> ";
 
-                    }
+                println("</div>");
+                println("                        </div>");
+                println("                    </div>");
+                println("                </div>");
 
-                    println("</div>");
-                    println("                        </div>");
-                    println("                    </div>");
-                    println("                </li>");
-
-                }
             }
 
             println("                </div>");
-            println("            </ul>");
+            println("            </div>");
 
         } else {
 
@@ -174,14 +182,14 @@ function getLanguageColor($language){
 
     } catch (PDOException $e){
 
-        echo "</br>" . $translations[$lang]['connection-failed'] . ": " . $e -> getMessage();
+        echo "<br/>" . $translations[$lang]['connection-failed'] . ": " . $e -> getMessage();
 
     }
 
     $conn = null?>
         </div>
-        <footer class="col-lg-12 text-center mt-0">
-            <p><?php echo $translations[$lang]['made-by']?> Paragoumba <?php echo $translations[$lang]['thanks-to']?> <a href="https://getbootstrap.com" target="_blank">Bootstrap</a></p>
+        <footer class="col-lg-12 text-center mt-3">
+            <p><?php echo $version . " - " . $translations[$lang]['made-by']?> Paragoumba <?php echo $translations[$lang]['thanks-to']?> <a href="https://getbootstrap.com" target="_blank">Bootstrap</a></p>
         </footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

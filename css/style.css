@@ -16,12 +16,6 @@ p a:hover {
 
 }
 
-ul {
-
-    list-style: none;
-
-}
-
 .bg-danger, .btn-danger, .badge-danger {
 
     background-color: #D62A2A!important;
@@ -53,18 +47,21 @@ ul {
 
 }
 
-@media(min-width: 992px) {
+@media (min-width: 992px) {
     .mtc-lg-8 {
 
         margin-top: 8rem;
 
     }
 }
-/* margin-bottom-custom-8rem */
-.mbc-8 {
 
-    margin-bottom: 8rem;
+@media (min-width: 992px) {
+    /* margin-bottom-custom-8rem */
+    .mbc-lg-8 {
 
+        margin-bottom: 8rem;
+
+    }
 }
 
 /* margin-left-custom-7rem */
